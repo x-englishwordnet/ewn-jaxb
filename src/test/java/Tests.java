@@ -14,7 +14,7 @@ public class Tests
 {
 	private String TEST_FILE = "wn-verb.body.xml";
 
-	private final String ewnHome = System.getenv("EWNHOME") + File.separator + "master" + File.separator + "src";
+	private final String ewnHome = System.getenv("EWNHOME") + File.separator + "src";
 
 	private LexicalResource lexicalResource;
 
