@@ -1,8 +1,8 @@
 <p align="center">
-<img width="256" height="256" src="images/xewn2.png">
+<img width="256" height="256" src="images/xewn2.png" alt="xewn2">
 </p>
 <p align="center">
-<img width="256" src="images/mavencentral.png">
+<img width="198" src="images/mavencentral.png" alt="mavencentral">
 </p>
 
 ### Java Architecture for XML Binding (JAXB) for EWN XML schema
