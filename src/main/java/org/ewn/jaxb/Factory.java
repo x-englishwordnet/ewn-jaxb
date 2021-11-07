@@ -8,7 +8,6 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.stream.StreamSource;
 import java.io.File;
-import java.io.IOException;
 
 public class Factory
 {
@@ -16,7 +15,7 @@ public class Factory
 	{
 	}
 
-	public static LexicalResource make(final File xmlFile) throws IOException, IOException, JAXBException, XMLStreamException
+	public static LexicalResource make(final File xmlFile) throws JAXBException, XMLStreamException
 	{
 		XMLInputFactory xif = XMLInputFactory.newFactory();
 		xif.setProperty(XMLInputFactory.SUPPORT_DTD, false);

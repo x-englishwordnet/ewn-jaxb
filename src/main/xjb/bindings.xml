@@ -8,7 +8,7 @@
         version="2.1"
         >
 
-    <jxb:bindings schemaLocation="xsd/core-1.1.xsd">
+    <jxb:bindings schemaLocation="xsd/core-1.1b.xsd">
         <jxb:bindings node="//xs:element[@name='Sense']/xs:complexType">
             <inheritance:extends>org.ewn.jaxb.Base</inheritance:extends>
         </jxb:bindings>
