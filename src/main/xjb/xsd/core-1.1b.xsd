@@ -5,28 +5,12 @@
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
             xmlns:dc='https://globalwordnet.github.io/schemas/dc/'
             xmlns:jaxb="https://jakarta.ee/xml/ns/jaxb"
-            xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
-            jaxb:version="3.0"
-            jaxb:extensionBindingPrefixes="xjc">
+            jaxb:version="3.0">
 
 	<xsd:import namespace='https://globalwordnet.github.io/schemas/dc/' schemaLocation='dc.xsd'/>
 	<xsd:include schemaLocation='pwn.xsd'/>
 	<xsd:include schemaLocation='ili.xsd'/>
 	<xsd:include schemaLocation='meta.xsd'/>
-
-	<!-- A N N O T A T I O N -->
-
-	<xsd:annotation>
-		<xsd:appinfo>
-<!--			<jaxb:bindings node="//xsd:element[@name='Sense']/xsd:complexType">-->
-<!--				<xjc:superClass name="org.ewn.jaxb.Base"/>-->
-<!--			</jaxb:bindings>-->
-<!--			<jaxb:globalBindings>-->
-<!--				<xjc:superClass name="org.ewn.jaxb.Base"/>-->
-<!--				<jaxb:serializable uid="2021"/>-->
-<!--			</jaxb:globalBindings>-->
-		</xsd:appinfo>
-	</xsd:annotation>
 
 	<!-- E L E M E N T S -->
 

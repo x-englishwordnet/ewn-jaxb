@@ -25,7 +25,24 @@ public class Factory
 
 		JAXBContext jaxbContext = JAXBContext.newInstance(LexicalResource.class);
 		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+		jaxbUnmarshaller.setListener(new Unmarshaller.Listener()
+		{
 
+			@Override
+			public void beforeUnmarshal(final Object target, final Object parent)
+			{
+				super.beforeUnmarshal(target, parent);
+				// System.out.printf("%s %s%n", target, parent);
+			}
+
+			@Override
+			public void afterUnmarshal(final Object target, final Object parent)
+			{
+				super.afterUnmarshal(target, parent);
+				// System.out.printf("%s parent %s%n", target, parent);
+				((Base) target).setParent(parent);
+			}
+		});
 		return (LexicalResource) jaxbUnmarshaller.unmarshal(xsr);
 	}
 }

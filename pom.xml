@@ -6,7 +6,7 @@
 
 	<groupId>io.github.x-englishwordnet</groupId>
 	<artifactId>ewn-jaxb</artifactId>
-	<version>1.1.1</version>
+	<version>1.2.0</version>
 	<name>EWN JAXB</name>
 	<description>Provides plain old java objects to bind to Open English Wordnet XML files.</description>
 	<url>https://github.com/x-englishwordnet/ewn-jaxb</url>
@@ -76,13 +76,6 @@
 					<packageName>org.ewn.jaxb</packageName>
 				</configuration>
 				<dependencies>
-					<!--
-						<dependency>
-							<groupId>org.glassfish.jaxb</groupId>
-							<artifactId>jaxb-xjc</artifactId>
-							<version>${version.maven.jaxb.xjc}</version>
-						</dependency>
-					-->
 					<dependency>
 						<groupId>com.sun.xml.bind</groupId>
 						<artifactId>jaxb-xjc</artifactId>
@@ -145,6 +138,22 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.2</version>
+				<configuration>
+					<systemProperties>
+						<property>
+							<name>SOURCE</name>
+							<value>${env.XEWNHOME}/src_merged/wn.xml</value>
+							<name>SILENT</name>
+							<value>true</value>
+						</property>
+					</systemProperties>
+				</configuration>
 			</plugin>
 
 			<plugin>

@@ -1,6 +1,5 @@
 import org.ewn.jaxb.*;
 
-import java.math.BigInteger;
 import java.util.List;
 
 import static org.junit.Assert.assertNotNull;
@@ -36,7 +35,7 @@ public class Scan
 		{
 			if (this.verbose)
 			{
-				System.out.printf("senses of %s%n", toString(lexEntry));
+				System.out.printf("senses of %s%n", Strings.toString(lexEntry));
 			}
 
 			for (Sense sense : lexEntry.getSense())
@@ -45,7 +44,7 @@ public class Scan
 				Synset synset = (Synset) sense.getSynset();
 				if (this.verbose)
 				{
-					System.out.printf("\tsynset %s%n", toString(synset));
+					System.out.printf("\tsynset %s%n", Strings.toString(synset));
 					// walkSynset(synset, "\t");
 				}
 				System.out.println();
@@ -68,48 +67,11 @@ public class Scan
 		}
 	}
 
-	public String toString(LexicalEntry lexEntry)
-	{
-		Lemma lemma = lexEntry.getLemma();
-		PartOfSpeechType pos = lemma.getPartOfSpeech();
-		String writtenForm = lemma.getWrittenForm();
-		List<Pronunciation> pronunciations = lexEntry.getLemma().getPronunciation();
-		String pronunciation = Utils.join(pronunciations, ' ', p -> {
-
-			String ipa = p.getContent();
-			String variety = p.getVariety();
-			return String.format("%s/%s/", variety == null ? "" : "[" + variety + "] ", ipa);
-
-		});
-		return String.format("%s '%s' %s", pos, writtenForm, pronunciation);
-	}
-
-	public String toString(Sense sense)
-	{
-		String senseId = sense.getId();
-		BigInteger n = sense.getN();
-		AdjPositionType adjPosition = sense.getAdjposition();
-		String sensekey = Utils.getSensekey(sense);
-		// OBSOLETE
-		// String identifier = sense.getIdentifier();
-		return String.format("%s sensekey:'%s' n:%d adjpos:%s", senseId, sensekey, n, adjPosition);
-	}
-
-	public String toString(Synset synset)
-	{
-		String synsetid = synset.getId();
-		PartOfSpeechType pos = synset.getPartOfSpeech();
-		List<Object> members = synset.getMembers();
-		String members2 = Utils.join(members, ',', m -> ((LexicalEntry) m).getLemma().getWrittenForm());
-		String definition = synset.getDefinition().get(0).getContent();
-		return String.format("%s %s {%s} \"%s\"", synsetid, pos, members2, definition.length() > 32 ? definition.substring(0, 32) + "..." : definition);
-	}
-
 	public void walkLexEntry(LexicalEntry lexEntry, CharSequence indent)
 	{
 		if (this.verbose)
 		{
-			System.out.printf("%slexentry %s%n", indent, toString(lexEntry));
+			System.out.printf("%slexentry %s%n", indent, Strings.toString(lexEntry));
 		}
 	}
 
@@ -117,12 +79,12 @@ public class Scan
 	{
 		if (verbose)
 		{
-			System.out.printf("%ssense %s%n", indent, toString(sense));
+			System.out.printf("%ssense %s%n", indent, Strings.toString(sense));
 		}
 
 		// lexical entry
-		// LexicalEntry lexEntry = (LexicalEntry) sense.getParent();
-		// walkLexEntry(lexEntry, indent);
+		LexicalEntry lexEntry = (LexicalEntry) sense.getParent();
+		walkLexEntry(lexEntry, indent);
 
 		// verb frames and templates
 		List<Object> subcats = sense.getSubcat();
@@ -135,25 +97,6 @@ public class Scan
 			}
 		}
 
-		/*
-		// OBSOLETE
-		List<SyntacticBehaviour> syntacticBehaviours = lexEntry.getSyntacticBehaviour();
-		if (syntacticBehaviours != null)
-		{
-			for (SyntacticBehaviour syntacticBehaviour : syntacticBehaviours)
-			{
-				if (syntacticBehaviour.getSenses().contains(senseId))
-				{
-					String verbFrame = syntacticBehaviour.getSubcategorizationFrame();
-					if (verbose)
-					{
-						System.out.printf("verbframe: %s%n", verbFrame);
-					}
-				}
-			}
-		}
-		*/
-
 		// lex relations
 		for (SenseRelation senseRelation : sense.getSenseRelation())
 		{
@@ -161,15 +104,13 @@ public class Scan
 			SenseRelationType type = senseRelation.getRelType();
 			if (target != null) // local ref within this file
 			{
-				/*
-				LexicalEntry targetLexEntry = (LexicalEntry) target.getParent();
+				LexicalEntry targetLexEntry = Utils.getLexicalEntry(target);
 				String targetLemma = targetLexEntry.getLemma().getWrittenForm();
 				Synset targetSynset = (Synset) target.getSynset();
 				if (verbose)
 				{
 					System.out.printf("%srelation: %s to target lemma '%s' synset '%s'%n", indent, type, targetLemma, targetSynset.getDefinition().get(0).getContent());
 				}
-				*/
 			}
 		}
 	}
@@ -178,7 +119,7 @@ public class Scan
 	{
 		if (verbose)
 		{
-			System.out.printf("%ssynset %s%n", indent, toString(synset));
+			System.out.printf("%ssynset %s%n", indent, Strings.toString(synset));
 		}
 
 		List<Object> members = synset.getMembers();

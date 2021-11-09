@@ -1,4 +1,4 @@
-import org.ewn.jaxb.Sense;
+package org.ewn.jaxb;
 
 import java.util.Collection;
 import java.util.function.Function;
@@ -10,12 +10,23 @@ public class Utils
 	}
 
 	/**
+	 * Get sense's lexical entry
+	 *
+	 * @param sense sense
+	 * @return lexical entry
+	 */
+	static public LexicalEntry getLexicalEntry(Sense sense)
+	{
+		return (LexicalEntry) sense.getParent();
+	}
+
+	/**
 	 * Extract sensekey
 	 *
 	 * @param sense sense
 	 * @return sensekey
 	 */
-	static String getSensekey(Sense sense)
+	static public String getSensekey(Sense sense)
 	{
 		String sk = sense.getId();
 		int b = sk.indexOf("__");
@@ -54,7 +65,7 @@ public class Utils
 	 * @param f     string function to represent item
 	 * @return joined string representation of items
 	 */
-	static <T> String join(Collection<T> items, char delim, Function<T, String> f)
+	static public <T> String join(Collection<T> items, char delim, Function<T, String> f)
 	{
 		StringBuilder sb = new StringBuilder();
 		boolean first = true;

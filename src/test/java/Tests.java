@@ -13,26 +13,22 @@ import static org.junit.Assert.assertNotNull;
 
 public class Tests
 {
-	@SuppressWarnings("FieldCanBeLocal")
-	private final String MERGED_FILE = "merged/xewn.xml";
+	private String source = System.getProperty("SOURCE");
 
-	private final String ewnHome = System.getenv("EWNHOME");
-
-	private final String xewnHome = System.getenv("XEWNHOME");
-
-	private final String target = System.getenv("TARGET");
+	private final boolean silent = System.getProperties().containsKey("SILENT");
 
 	private LexicalResource lexicalResource;
 
 	@Before
 	public void init() throws JAXBException, XMLStreamException
 	{
-		// System.out.println(xewnHome);
-		// System.out.println(ewnHome);
-		// System.out.println(target);
-		final String dir = xewnHome.isEmpty() ? ewnHome : xewnHome;
-		final File xmlFile = target != null ? new File(dir, target) : new File(dir, MERGED_FILE);
-		System.out.println(xmlFile.getAbsolutePath());
+		if (source == null)
+		{
+			System.err.printf("Define source file with -DSOURCE=path%n");
+			System.exit(1);
+		}
+		final File xmlFile = new File(source);
+		System.out.printf("source=%s%n", xmlFile.getAbsolutePath());
 		this.lexicalResource = Factory.make(xmlFile);
 	}
 
@@ -40,20 +36,20 @@ public class Tests
 	public void scanLexEntries()
 	{
 		assertNotNull(this.lexicalResource);
-		new Scan(true).scanLexEntries(this.lexicalResource);
+		new Scan(!silent).scanLexEntries(this.lexicalResource);
 	}
 
 	@Test
 	public void scanSenses()
 	{
 		assertNotNull(this.lexicalResource);
-		new Scan(true).scanSenses(this.lexicalResource);
+		new Scan(!silent).scanSenses(this.lexicalResource);
 	}
 
 	@Test
 	public void scanSynsets()
 	{
 		assertNotNull(this.lexicalResource);
-		new Scan(true).scanSynsets(this.lexicalResource);
+		new Scan(!silent).scanSynsets(this.lexicalResource);
 	}
 }
