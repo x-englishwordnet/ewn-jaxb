@@ -161,6 +161,7 @@ public class Scan
 			SenseRelationType type = senseRelation.getRelType();
 			if (target != null) // local ref within this file
 			{
+				/*
 				LexicalEntry targetLexEntry = (LexicalEntry) target.getParent();
 				String targetLemma = targetLexEntry.getLemma().getWrittenForm();
 				Synset targetSynset = (Synset) target.getSynset();
@@ -168,6 +169,7 @@ public class Scan
 				{
 					System.out.printf("%srelation: %s to target lemma '%s' synset '%s'%n", indent, type, targetLemma, targetSynset.getDefinition().get(0).getContent());
 				}
+				*/
 			}
 		}
 	}

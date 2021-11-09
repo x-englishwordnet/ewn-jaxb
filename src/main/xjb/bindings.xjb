@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jaxb:bindings
+	xmlns:jaxb="https://jakarta.ee/xml/ns/jaxb"
+	xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	version="3.0"
+>
+	<jaxb:bindings schemaLocation="xsd/core-1.1b.xsd">
+		<jaxb:globalBindings>
+			<xjc:superClass name="org.ewn.jaxb.Base"/>
+		</jaxb:globalBindings>
+		<!-- does not work-->
+		<!-- <jaxb:bindings node="//xs:element[@name='Sense']">-->
+		<!-- <xjc:superClass name="org.ewn.jaxb.Base"/>-->
+		<!-- </jaxb:bindings>-->
+	</jaxb:bindings>
+
+</jaxb:bindings>
