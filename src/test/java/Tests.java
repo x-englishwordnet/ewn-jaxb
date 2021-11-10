@@ -13,7 +13,7 @@ import static org.junit.Assert.assertNotNull;
 
 public class Tests
 {
-	private String source = System.getProperty("SOURCE");
+	private final String source = System.getProperty("SOURCE");
 
 	private final boolean silent = System.getProperties().containsKey("SILENT");
 
