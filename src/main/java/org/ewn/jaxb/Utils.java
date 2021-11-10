@@ -28,34 +28,66 @@ public class Utils
 	 */
 	static public String getSensekey(Sense sense)
 	{
-		String sk = sense.getId();
+		String senseId = sense.getId();
+		return toSensekey(senseId);
+	}
+
+	/**
+	 * Convert ID to sensekey
+	 *
+	 * @param senseId sense id
+	 * @return sensekey
+	 */
+	static public String toSensekey(String senseId)
+	{
+		String sk = senseId.substring("oewn-".length());
 		int b = sk.indexOf("__");
 
 		String lemma = sk.substring(0, b) //
 				.replace("-ap-", "'") //
-				.replace("-ap-", "'") //
-				.replace("-lb-", "(") //
-				.replace("-rb-", ")") //
+				.replace("-lb-", "(") // extension
+				.replace("-rb-", ")") // extension
 				.replace("-sl-", "/") //
-				.replace("-cm-", ",") //
 				.replace("-ex-", "!") //
+				.replace("-cm-", ",") //
 				.replace("-cl-", ":") //
-				.replace("-sp-", "_");
+				.replace("-sp-", "_"); // extension
 
 		String tail = sk.substring(b + 2) //
 				.replace(".", ":") //
-				.replace("-ap-", "'") //
-				.replace("-ap-", "'") //
-				.replace("-lb-", "(") //
-				.replace("-rb-", ")") //
-				.replace("-sl-", "/") //
-				.replace("-cm-", ",") //
-				.replace("-ex-", "!") //
-				.replace("-cl-", ":") //
+				.replace("-ap-", "'") // extension
+				.replace("-ap-", "'") // extension
+				.replace("-lb-", "(") // extension
+				.replace("-rb-", ")") // extension
+				.replace("-sl-", "/") // extension
+				.replace("-cm-", ",") // extension
+				.replace("-ex-", "!") // extension
+				.replace("-cl-", ":") // extension
 				.replace("-sp-", "_");
 
 		return lemma + '%' + tail;
 	}
+
+	/*
+	def unmap_sense_key(sk):
+	    if "__" in sk:
+	        e = sk.split("__")
+	        l = e[0][KEY_PREFIX_LEN:]
+	        r = "__".join(e[1:])
+	        return (
+	        l
+	        .replace("-ap-", "'")
+	        .replace("-sl-", "/")
+	        .replace("-ex-", "!")
+	        .replace("-cm-",",")
+	        .replace("-cl-",":")
+	        + "%" +
+	        r
+	        .replace(".", ":")
+	        .replace("-sp-","_"))
+	    else:
+	        return sk[KEY_PREFIX_LEN:].replace("__", "%").replace("-ap-", "'").replace("-sl-", "/").replace("-ex-", "!").replace("-cm-",",").replace("-cl-",":")
+	*/
 
 	/**
 	 * Join items
