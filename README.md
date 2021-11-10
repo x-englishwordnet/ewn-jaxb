@@ -18,6 +18,15 @@ Please refer to the test classes in the source files to get a glimpse as to how 
 
 GroupID and ArtifactID on Maven Central:
 
+for OEWN 2021, uses JAXB3
+
+    <groupId>io.github.x-englishwordnet</groupId>
+    <artifactId>ewn-jaxb</artifactId>
+    <version>1.2.0</version>
+    <name>EWN JAXB</name>
+
+for OEWN 2020
+
     <groupId>io.github.x-englishwordnet</groupId>
     <artifactId>ewn-jaxb</artifactId>
     <version>1.0.1</version>
