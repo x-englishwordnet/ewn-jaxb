@@ -149,8 +149,9 @@
 						<property>
 							<name>SOURCE</name>
 							<value>${env.XEWNHOME}/src_merged/wn.xml</value>
+						</property>
+						<property>
 							<name>SILENT</name>
-							<value>true</value>
 						</property>
 					</systemProperties>
 				</configuration>
