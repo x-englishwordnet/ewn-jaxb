@@ -1,6 +1,5 @@
 package org.ewn.jaxb;
 
-import java.util.Collection;
 import java.util.function.Function;
 
 public class Utils
@@ -56,12 +55,11 @@ public class Utils
 		String tail = sk.substring(b + 2) //
 				.replace(".", ":") //
 				.replace("-ap-", "'") // extension
-				.replace("-ap-", "'") // extension
 				.replace("-lb-", "(") // extension
 				.replace("-rb-", ")") // extension
 				.replace("-sl-", "/") // extension
-				.replace("-cm-", ",") // extension
 				.replace("-ex-", "!") // extension
+				.replace("-cm-", ",") // extension
 				.replace("-cl-", ":") // extension
 				.replace("-sp-", "_");
 
@@ -76,28 +74,92 @@ public class Utils
 	        r = "__".join(e[1:])
 	        return (
 	        l
-	        .replace("-ap-", "'")
-	        .replace("-sl-", "/")
-	        .replace("-ex-", "!")
-	        .replace("-cm-",",")
-	        .replace("-cl-",":")
+		        .replace("-ap-", "'")
+		        .replace("-sl-", "/")
+		        .replace("-ex-", "!")
+		        .replace("-cm-",",")
+		        .replace("-cl-",":")
 	        + "%" +
 	        r
-	        .replace(".", ":")
-	        .replace("-sp-","_"))
+		        .replace(".", ":")
+		        .replace("-sp-","_"))
 	    else:
-	        return sk[KEY_PREFIX_LEN:].replace("__", "%").replace("-ap-", "'").replace("-sl-", "/").replace("-ex-", "!").replace("-cm-",",").replace("-cl-",":")
+	        return sk[KEY_PREFIX_LEN:]
+		        .replace("__", "%")
+		        .replace("-ap-", "'")
+		        .replace("-sl-", "/")
+		        .replace("-ex-", "!")
+		        .replace("-cm-",",")
+		        .replace("-cl-",":")
+	*/
+
+	/**
+	 * Convert sensekey to ID
+	 *
+	 * @param sensekey sensekey
+	 * @return sensekey
+	 */
+	static public String toId(String sensekey)
+	{
+		int b = sensekey.indexOf('%');
+
+		String lemma = sensekey.substring(0, b) //
+				.replace("'", "-ap-") //
+				.replace("(", "-lb-") // extension
+				.replace(")", "-rb-") // extension
+				.replace("/", "-sl-") //
+				.replace("!", "-ex-") //
+				.replace(",", "-cm-") //
+				.replace(":", "-cl-") //
+				.replace("_", "-sp-"); // extension
+
+		String tail = sensekey.substring(b + 1) //
+				.replace("_", "-sp-") //
+				.replace("'", "-ap-") // extension
+				.replace("(", "-lb-") // extension
+				.replace(")", "-rb-") // extension
+				.replace("/", "-sl-") // extension
+				.replace(",", "-cm-") // extension
+				.replace("!", "-ex-") // extension
+				.replace(":", ".");
+
+		return "oewn-" + lemma + "__" + tail;
+	}
+	/*
+	def map_sense_key(sk):
+	    if "%" in sk:
+	        e = sk.split("%")
+	        return ("oewn-" +
+		        e[0]
+			        .replace("'","-ap-")
+			        .replace("/","-sl-")
+			        .replace("!","-ex-")
+			        .replace(",","-cm-")
+			        .replace(":","-cl-")
+			    + "__" +
+			    e[1]
+			        .replace("_","-sp-")
+			        .replace(":","."))
+	    else:
+	        return "oewn-" + sk
+		        .replace("%", "__")
+		        .replace("'","-ap-")
+		        .replace("/","-sl-")
+		        .replace("!","-ex-")
+		        .replace(",","-cm-")
+		        .replace(":","-cl-")
 	*/
 
 	/**
 	 * Join items
 	 *
-	 * @param items collection of items of type T
+	 * @param <T>   type of items
+	 * @param items iteration of items of type T
 	 * @param delim delimiter
 	 * @param f     string function to represent item
 	 * @return joined string representation of items
 	 */
-	static public <T> String join(Collection<T> items, char delim, Function<T, String> f)
+	static public <T> String join(Iterable<T> items, char delim, Function<T, String> f)
 	{
 		StringBuilder sb = new StringBuilder();
 		boolean first = true;

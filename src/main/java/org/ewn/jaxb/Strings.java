@@ -3,7 +3,8 @@ package org.ewn.jaxb;
 import java.math.BigInteger;
 import java.util.List;
 
-public class Strings {
+public class Strings
+{
 	public static String toString(LexicalEntry lexEntry)
 	{
 		Lemma lemma = lexEntry.getLemma();
