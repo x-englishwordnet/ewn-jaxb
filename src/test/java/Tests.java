@@ -1,6 +1,6 @@
 import org.ewn.jaxb.Factory;
 import org.ewn.jaxb.LexicalResource;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
@@ -13,14 +13,14 @@ import static org.junit.Assert.assertNotNull;
 
 public class Tests
 {
-	private final String source = System.getProperty("SOURCE");
+	private static final String source = System.getProperty("SOURCE");
 
-	private final boolean silent = System.getProperties().containsKey("SILENT");
+	private static final boolean silent = System.getProperties().containsKey("SILENT");
 
-	private LexicalResource lexicalResource;
+	private static LexicalResource lexicalResource;
 
-	@Before
-	public void init() throws JAXBException, XMLStreamException
+	@BeforeClass
+	public static void getDocument() throws JAXBException, XMLStreamException
 	{
 		if (source == null)
 		{
@@ -29,27 +29,30 @@ public class Tests
 		}
 		final File xmlFile = new File(source);
 		System.out.printf("source=%s%n", xmlFile.getAbsolutePath());
-		this.lexicalResource = Factory.make(xmlFile);
+		if (!xmlFile.exists())
+		{
+			System.err.println("Define XML source dir that exists");
+			System.exit(2);
+		}
+		lexicalResource = Factory.make(xmlFile);
+		assertNotNull(lexicalResource);
 	}
 
 	@Test
 	public void scanLexEntries()
 	{
-		assertNotNull(this.lexicalResource);
-		new Scan(!silent).scanLexEntries(this.lexicalResource);
+		new Scan(!silent).scanLexEntries(lexicalResource);
 	}
 
 	@Test
 	public void scanSenses()
 	{
-		assertNotNull(this.lexicalResource);
-		new Scan(!silent).scanSenses(this.lexicalResource);
+		new Scan(!silent).scanSenses(lexicalResource);
 	}
 
 	@Test
 	public void scanSynsets()
 	{
-		assertNotNull(this.lexicalResource);
-		new Scan(!silent).scanSynsets(this.lexicalResource);
+		new Scan(!silent).scanSynsets(lexicalResource);
 	}
 }

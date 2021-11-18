@@ -41,12 +41,6 @@ public class Scan
 			for (Sense sense : lexEntry.getSense())
 			{
 				walkSense(sense, "\t");
-				Synset synset = (Synset) sense.getSynset();
-				if (this.verbose)
-				{
-					System.out.printf("\tsynset %s%n", Strings.toString(synset));
-					// walkSynset(synset, "\t");
-				}
 				System.out.println();
 			}
 
@@ -69,6 +63,11 @@ public class Scan
 
 	public void walkLexEntry(LexicalEntry lexEntry, CharSequence indent)
 	{
+		Dump.dumpLex(lexEntry, indent, !verbose);
+	}
+
+	public void walkLexEntry2(LexicalEntry lexEntry, CharSequence indent)
+	{
 		if (this.verbose)
 		{
 			System.out.printf("%slexentry %s%n", indent, Strings.toString(lexEntry));
@@ -76,6 +75,11 @@ public class Scan
 	}
 
 	public void walkSense(Sense sense, CharSequence indent)
+	{
+		Dump.dumpSense(sense, indent, !verbose);
+	}
+
+	public void walkSense2(Sense sense, CharSequence indent)
 	{
 		if (verbose)
 		{
@@ -110,6 +114,7 @@ public class Scan
 				if (verbose)
 				{
 					System.out.printf("%srelation: %s to target lemma '%s' synset '%s'%n", indent, type, targetLemma, targetSynset.getDefinition().get(0).getContent());
+					System.out.printf("%srelation: %s to target lemma '%s' synset '%s'%n", indent, type, targetLemma, targetSynset.getDefinition().get(0).getContent());
 				}
 			}
 		}
@@ -117,11 +122,17 @@ public class Scan
 
 	public void walkSynset(Synset synset, CharSequence indent)
 	{
+		Dump.dumpSynset(synset,indent,!this.verbose);
+	}
+
+	public void walkSynset2(Synset synset, CharSequence indent)
+	{
 		if (verbose)
 		{
 			System.out.printf("%ssynset %s%n", indent, Strings.toString(synset));
 		}
 
+		// members
 		List<Object> members = synset.getMembers();
 		for (Object member : members)
 		{
