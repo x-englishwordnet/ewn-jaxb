@@ -22,7 +22,7 @@ for OEWN 2021, uses JAXB3
 
     <groupId>io.github.x-englishwordnet</groupId>
     <artifactId>ewn-jaxb</artifactId>
-    <version>1.2.2</version>
+    <version>1.21.0</version>
     <name>EWN JAXB</name>
 
 for OEWN 2020

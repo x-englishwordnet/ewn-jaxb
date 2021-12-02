@@ -1,5 +1,6 @@
 package org.ewn.jaxb;
 
+import java.io.PrintStream;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -8,40 +9,28 @@ import java.util.List;
  */
 public class Dump
 {
-	public static void dumpLex(LexicalEntry lexEntry, CharSequence indent, boolean silent)
+	public static void dumpLex(LexicalEntry lexEntry, CharSequence indent, PrintStream ps)
 	{
-		if (!silent)
-		{
-			System.out.printf("%slexentry %s%n", indent, Strings.toString(lexEntry));
-		}
+		ps.printf("%slexentry %s%n", indent, Strings.toString(lexEntry));
 	}
 
-	public static void dumpSense(Sense sense, CharSequence indent, boolean silent)
+	public static void dumpSense(Sense sense, CharSequence indent, PrintStream ps)
 	{
 		String id = sense.getId();
 		BigInteger n = sense.getN();
-		if (!silent)
-		{
-			System.out.printf("%ssense id: %s%n", indent, id);
-			System.out.printf("%s\tsensekey: %s%n", indent, Utils.toSensekey(id));
-			System.out.printf("%s\tn: %s%n", indent, n == null ? "" : n);
-		}
+		ps.printf("%ssense id: %s%n", indent, id);
+		ps.printf("%s\tsensekey: %s%n", indent, Utils.toSensekey(id));
+		ps.printf("%s\tn: %s%n", indent, n == null ? "" : n);
 
 		// lexical entry
 		LexicalEntry lex = (LexicalEntry) sense.getParent();
 		Lemma lemma = lex.getLemma();
 		assert lemma != null;
-		if (!silent)
-		{
-			System.out.printf("%s\tlemma: %s%n", indent, lemma.getWrittenForm());
-		}
+		ps.printf("%s\tlemma: %s%n", indent, lemma.getWrittenForm());
 
 		// adj
 		AdjPositionType adjposition = sense.getAdjposition();
-		if (!silent)
-		{
-			System.out.printf("%s\tadjPosition: %s%n", indent, adjposition);
-		}
+		ps.printf("%s\tadjPosition: %s%n", indent, adjposition);
 
 		// verb frames and templates
 		List<Object> subcats = sense.getSubcat();
@@ -49,10 +38,7 @@ public class Dump
 		{
 			SyntacticBehaviour verbFrame = (SyntacticBehaviour) subcat;
 			assert verbFrame != null;
-			if (!silent)
-			{
-				System.out.printf("%s\tverb frame : %s = %s%n", indent, verbFrame.getId(), verbFrame.getSubcategorizationFrame());
-			}
+			ps.printf("%s\tverb frame : %s = %s%n", indent, verbFrame.getId(), verbFrame.getSubcategorizationFrame());
 		}
 
 		// lex relations
@@ -66,27 +52,19 @@ public class Dump
 				LexicalEntry targetLexEntry = Utils.getLexicalEntry(target);
 				String targetLemma = targetLexEntry.getLemma().getWrittenForm();
 				Synset targetSynset = (Synset) target.getSynset();
-				if (!silent)
-				{
-					System.out.printf("%s\trelation: %s to target lemma '%s' synset '%s'%n", indent, type, targetLemma, targetSynset.getDefinition().get(0).getContent());
-				}
+				ps.printf("%s\trelation: %s to target lemma '%s' synset '%s'%n", indent, type, targetLemma, targetSynset.getDefinition().get(0).getContent());
 			}
 		}
 
 		// synset
 		Synset synset = (Synset) sense.getSynset();
-		if (!silent)
-		{
-			System.out.printf("%s\tsynset %s%n", indent, Strings.toString(synset));
-		}
+		ps.printf("%s\tsynset %s%n", indent, Strings.toString(synset));
 	}
 
-	public static void dumpSynset(Synset synset, CharSequence indent, boolean silent)
+	public static void dumpSynset(Synset synset, CharSequence indent, PrintStream ps)
 	{
-		if (!silent)
-		{
-			System.out.printf("%s\tsynset id: %s%n", indent, synset.getId());
-		}
+		ps.printf("%s\tsynset id: %s%n", indent, synset.getId());
+
 		// members
 		List<Object> lexObjects = synset.getMembers();
 		assert lexObjects.size() > 0;
@@ -94,33 +72,24 @@ public class Dump
 		{
 			LexicalEntry lex = (LexicalEntry) lexObject;
 			Lemma lemma = lex.getLemma();
-			String pronunciation = Utils.join(lex.getLemma().getPronunciation(), ' ', p -> {
+			String pronunciation = Utils.join(lemma.getPronunciation(), ' ', p -> {
 
 				String ipa = p.getContent();
 				String variety = p.getVariety();
 				return String.format("%s/%s/", variety == null ? "" : "[" + variety + "] ", ipa);
 
 			});
-			if (!silent)
-			{
-				System.out.printf("%s\tmember: %s '%s' %s%n", indent, lex.getId(), lex.getLemma().getWrittenForm(), pronunciation);
-			}
+			ps.printf("%s\tmember: %s '%s' %s%n", indent, lex.getId(), lex.getLemma().getWrittenForm(), pronunciation);
 		}
 
 		// definition
 		Definition definition = synset.getDefinition().get(0);
-		if (!silent)
-		{
-			System.out.printf("%s\tdefinition '%s'%n", indent, definition.getContent());
-		}
+		ps.printf("%s\tdefinition '%s'%n", indent, definition.getContent());
 
 		// example
 		for (Example example : synset.getExample())
 		{
-			if (!silent)
-			{
-				System.out.printf("%s\texample '%s'%n", indent, example.getContent());
-			}
+			ps.printf("%s\texample '%s'%n", indent, example.getContent());
 		}
 
 		// relation
@@ -131,10 +100,7 @@ public class Dump
 			{
 				SynsetRelationType type = synsetRelation.getRelType();
 				assert type != null;
-				if (!silent)
-				{
-					System.out.printf("%s\tsynset relation %s '%s'%n", indent, type, target.getDefinition().get(0).getContent());
-				}
+				ps.printf("%s\tsynset relation %s '%s'%n", indent, type, target.getDefinition().get(0).getContent());
 			}
 		}
 	}

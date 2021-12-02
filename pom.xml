@@ -6,7 +6,7 @@
 
 	<groupId>io.github.x-englishwordnet</groupId>
 	<artifactId>ewn-jaxb</artifactId>
-	<version>1.2.2-SNAPSHOT</version>
+	<version>1.21.0</version>
 	<name>EWN JAXB</name>
 	<description>Provides plain old java objects to bind to Open English Wordnet XML files.</description>
 	<url>https://github.com/x-englishwordnet/ewn-jaxb</url>

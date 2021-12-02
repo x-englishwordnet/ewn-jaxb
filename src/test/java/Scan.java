@@ -1,16 +1,24 @@
 import org.ewn.jaxb.*;
 
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.List;
 
 import static org.junit.Assert.assertNotNull;
 
 public class Scan
 {
-	private final boolean verbose;
+	private final PrintStream ps;
 
 	public Scan(final boolean verbose)
 	{
-		this.verbose = verbose;
+		this.ps = verbose ? System.out : new PrintStream(new OutputStream()
+		{
+			public void write(int b)
+			{
+				//DO NOTHING
+			}
+		});
 	}
 
 	public void scanLexEntries(final LexicalResource lexicalResource)
@@ -33,15 +41,12 @@ public class Scan
 
 		for (LexicalEntry lexEntry : lexicon.getLexicalEntry())
 		{
-			if (this.verbose)
-			{
-				System.out.printf("senses of %s%n", Strings.toString(lexEntry));
-			}
+			ps.printf("senses of %s%n", Strings.toString(lexEntry));
 
 			for (Sense sense : lexEntry.getSense())
 			{
 				walkSense(sense, "\t");
-				System.out.println();
+				ps.println();
 			}
 
 			// OBSOLETE
@@ -57,80 +62,42 @@ public class Scan
 		for (Synset synset : lexicon.getSynset())
 		{
 			walkSynset(synset, "");
-			System.out.println();
+			ps.println();
 		}
 	}
 
 	public void walkLexEntry(LexicalEntry lexEntry, CharSequence indent)
 	{
-		Dump.dumpLex(lexEntry, indent, !verbose);
+		Dump.dumpLex(lexEntry, indent, ps);
 	}
 
-	public void walkLexEntry2(LexicalEntry lexEntry, CharSequence indent)
+	public void walkLexEntryShort(LexicalEntry lexEntry, CharSequence indent)
 	{
-		if (this.verbose)
-		{
-			System.out.printf("%slexentry %s%n", indent, Strings.toString(lexEntry));
-		}
+		ps.printf("%slexentry %s%n", indent, Strings.toString(lexEntry));
 	}
 
 	public void walkSense(Sense sense, CharSequence indent)
 	{
-		Dump.dumpSense(sense, indent, !verbose);
+		Dump.dumpSense(sense, indent, ps);
 	}
 
-	public void walkSense2(Sense sense, CharSequence indent)
+	public void walkSenseShort(Sense sense, CharSequence indent)
 	{
-		if (verbose)
-		{
-			System.out.printf("%ssense %s%n", indent, Strings.toString(sense));
-		}
+		ps.printf("%ssense %s%n", indent, Strings.toString(sense));
 
 		// lexical entry
 		LexicalEntry lexEntry = (LexicalEntry) sense.getParent();
 		walkLexEntry(lexEntry, indent);
-
-		// verb frames and templates
-		List<Object> subcats = sense.getSubcat();
-		for (Object subcat : subcats)
-		{
-			SyntacticBehaviour verbFrame = (SyntacticBehaviour) subcat;
-			if (verbose)
-			{
-				System.out.printf("%sverb frame : %s = %s%n", indent, verbFrame.getId(), verbFrame.getSubcategorizationFrame());
-			}
-		}
-
-		// lex relations
-		for (SenseRelation senseRelation : sense.getSenseRelation())
-		{
-			Sense target = (Sense) senseRelation.getTarget();
-			SenseRelationType type = senseRelation.getRelType();
-			if (target != null) // local ref within this file
-			{
-				LexicalEntry targetLexEntry = Utils.getLexicalEntry(target);
-				String targetLemma = targetLexEntry.getLemma().getWrittenForm();
-				Synset targetSynset = (Synset) target.getSynset();
-				if (verbose)
-				{
-					System.out.printf("%srelation: %s to target lemma '%s' synset '%s'%n", indent, type, targetLemma, targetSynset.getDefinition().get(0).getContent());
-					System.out.printf("%srelation: %s to target lemma '%s' synset '%s'%n", indent, type, targetLemma, targetSynset.getDefinition().get(0).getContent());
-				}
-			}
-		}
 	}
 
 	public void walkSynset(Synset synset, CharSequence indent)
 	{
-		Dump.dumpSynset(synset,indent,!this.verbose);
+		Dump.dumpSynset(synset, indent, ps);
 	}
 
-	public void walkSynset2(Synset synset, CharSequence indent)
+	public void walkSynsetShort(Synset synset, CharSequence indent)
 	{
-		if (verbose)
-		{
-			System.out.printf("%ssynset %s%n", indent, Strings.toString(synset));
-		}
+		ps.printf("%ssynset %s%n", indent, Strings.toString(synset));
 
 		// members
 		List<Object> members = synset.getMembers();
@@ -144,34 +111,9 @@ public class Scan
 				return String.format("%s/%s/", variety == null ? "" : "[" + variety + "] ", ipa);
 
 			});
-			if (this.verbose)
-			{
-				System.out.printf("%s\tmember: %s '%s' %s%n", indent, memberEntry.getId(), memberEntry.getLemma().getWrittenForm(), pronunciation);
-			}
+			ps.printf("%s\tmember: %s '%s' %s%n", indent, memberEntry.getId(), memberEntry.getLemma().getWrittenForm(), pronunciation);
 		}
 		Definition definition = synset.getDefinition().get(0);
-		if (verbose)
-		{
-			System.out.printf("%s\tdefinition: '%s'%n", indent, definition.getContent());
-		}
-		for (Example example : synset.getExample())
-		{
-			if (this.verbose)
-			{
-				System.out.printf("%s\texample: %s%n", indent, example.getContent());
-			}
-		}
-		for (SynsetRelation synsetRelation : synset.getSynsetRelation())
-		{
-			Synset target = (Synset) synsetRelation.getTarget();
-			if (target != null) // local ref within this file
-			{
-				SynsetRelationType type = synsetRelation.getRelType();
-				if (this.verbose)
-				{
-					System.out.printf("%s\trelation: %s to target synset '%s'%n", indent, type, target.getDefinition().get(0).getContent());
-				}
-			}
-		}
+		ps.printf("%s\tdefinition: '%s'%n", indent, definition.getContent());
 	}
 }
